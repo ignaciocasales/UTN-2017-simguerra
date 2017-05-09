@@ -1,0 +1,164 @@
+.root {
+    -white: #ffffff;
+    -black: #000000;
+    -dark: #424242;
+
+    -primary: #212121;
+    -primary-light: #484848;
+    -primary-dark: #000000;
+    -secondary: #ffff00;
+    -secondaty-light: #ffff5a;
+    -secondary-dark: #c7cc00;
+    -text-color-primary: -white;
+    -text-color-secondary: -black;
+
+    /*default font */
+    -fx-font-family: 'Ubuntu';
+    -fx-font-size: 13px;
+
+    -fx-background-color: -primary-light;
+    -fx-text-fill: -text-color-primary;
+}
+
+/*misc*/
+
+.title {
+    -fx-text-fill: -text-color-primary;
+    -fx-font-size: 20px;
+    -fx-font-weight: bolder;
+}
+
+.label {
+    -fx-text-fill: -text-color-primary;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Button & ToggleButton                                                       *
+ *                                                                             *
+ ******************************************************************************/
+
+.button {
+    -fx-background-color: -secondary;
+    -fx-background-insets: 0.0;
+    -fx-background-radius: 2.0;
+    -fx-border-width: 0.0;
+    -fx-padding: 0.7em;
+    -fx-text-fill: -text-color-secondary;
+}
+
+.button:hover,
+.button:focused {
+    -fx-background-color: derive(-secondary, 25%);
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * MenuBar                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
+.menu-bar {
+    -fx-outer-border: -primary-dark;
+    -fx-color: -primary-dark;
+    -fx-background-color: -primary-dark;
+    -fx-background-insets: 0px;
+    -fx-background-radius: 0px;
+    -fx-padding: 0em;
+    -fx-text-fill: -text-color-primary;
+}
+
+.menu:hover,
+.menu:showing /* selects Menu in MenuBar, if shown */
+{
+    -fx-background-color: derive(-primary-dark, 35.0%);
+}
+
+.menu-item:focused {
+    -fx-background-color: -primary-light;
+}
+
+.context-menu {
+    -fx-background-insets: 0px;
+    -fx-background-radius: 0px;
+    -fx-padding: 0em;
+    -fx-background-color: -primary-light;
+}
+
+.context-menu:hover {
+    -fx-background-color: derive(-primary-dark, 35.0%);
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * TableView                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+.table-view .column-header-background .label {
+    -fx-text-fill: -text-color-primary;
+}
+
+.table-view .filler, .tree-table-view .filler, .table-view .column-header,
+.tree-table-view .column-header {
+    -fx-border-color: -primary;
+    -fx-background-color: -primary;
+}
+
+.table-view:row-selection {
+    -fx-background-color: transparent;
+}
+
+.table-view:row-selection .placeholder {
+    -fx-background-color: -white;
+}
+
+.table-view:row-selection .placeholder .label {
+    -fx-text-fill: black;
+}
+
+.table-view > *.virtual-flow > *.corner {
+    -fx-background-color: -primary-light;
+}
+
+.table-view > *.virtual-flow > *.scroll-bar:vertical,
+.table-view > *.virtual-flow > *.scroll-bar:horizontal {
+    -fx-background-color: -primary-light;
+}
+
+.scroll-bar:vertical > *.increment-button,
+.scroll-bar:horizontal > * .increment-button,
+.scroll-bar:vertical > * .decrement-button,
+.scroll-bar:horizontal > * .decrement-button {
+    -fx-background-color: -primary-light;
+}
+
+.scroll-bar:vertical > *.thumb,
+.scroll-bar:horizontal > *.thumb {
+    -fx-background-color: -primary-dark;
+}
+
+.table-view *.column-header-background {
+    -fx-background-color: -primary;
+
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Dialog                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+
+.myDialog {
+    -fx-background-color: -primary-light;
+}
+
+.myDialog > *.button-bar > *.container {
+    -fx-background-color: -primary-light;
+}
+
+.myDialog > *.label.content {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -text-color-primary;
+}
