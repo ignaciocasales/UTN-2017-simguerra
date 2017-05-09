@@ -1,6 +1,6 @@
 package main.java.com.utn.simbatallas.domain;
 
-import main.java.com.utn.simbatallas.domain.exceptions.PartidaTerminadaException;
+import main.java.com.utn.simbatallas.domain.exceptions.BattleWinnerException;
 
 import java.util.Observable;
 
@@ -11,16 +11,14 @@ import java.util.Observable;
  */
 public class BattleField extends Observable {
 
-    private String name;
     private Army winner;
+    private String name;
     private Boolean available;
-    private Boolean random;
 
-    public BattleField(String name, Boolean random) {
+    public BattleField(String name) {
         this.setName(name);
         this.setAvailable(true);
         winner = null;
-        this.setRandom(random);
     }
 
     public String getName() {
@@ -47,42 +45,26 @@ public class BattleField extends Observable {
         this.available = available;
     }
 
-    public Boolean isRandom() {
-        return random;
-    }
-
-    public void setRandom(Boolean random) {
-        this.random = random;
-    }
-
     /**
      * Método al que acceden los hilos. El primero que llega es al que le toca attack.
      *
-     * @param atacar   Army
+     * @param attacker Army
      * @param defender Army
      */
-    void enfrentamiento(Army atacar, Army defender) throws PartidaTerminadaException {
+    void confrontation(Army attacker, Army defender) throws BattleWinnerException {
         if (this.getWinner() != null) {
-            throw new PartidaTerminadaException();
+            this.setChanged();
+
+            notifyObservers(this);
+
+            throw new BattleWinnerException(this.getWinner());
         } else {
-            if (!(atacar.isDefeated()) && (defender.isDefeated())) {
-                this.setWinner(atacar);
-
-                this.setChanged();
-
-                notifyObservers(this);
-            } else if ((atacar.isDefeated()) && !(defender.isDefeated())) {
+            if (!(attacker.isDefeated()) && (defender.isDefeated())) {
+                this.setWinner(attacker);
+            } else if ((attacker.isDefeated()) && !(defender.isDefeated())) {
                 this.setWinner(defender);
-
-                this.setChanged();
-
-                notifyObservers(this);
             } else {
-                if (isRandom()) {
-                    atacar.attack();
-                } else {
-                    //TODO
-                }
+                attacker.attack();
             }
         }
     }

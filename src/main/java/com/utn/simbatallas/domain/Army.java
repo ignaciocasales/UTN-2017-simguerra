@@ -1,9 +1,9 @@
 package main.java.com.utn.simbatallas.domain;
 
-import main.java.com.utn.simbatallas.domain.exceptions.NoSoldadosException;
-import main.java.com.utn.simbatallas.domain.exceptions.OponenteNoSetException;
-import main.java.com.utn.simbatallas.domain.exceptions.PartidaTerminadaException;
-import main.java.com.utn.simbatallas.domain.exceptions.ReferenciaCruzadaNoSetThisException;
+import main.java.com.utn.simbatallas.domain.exceptions.CrossReferenceException;
+import main.java.com.utn.simbatallas.domain.exceptions.NoSoldiersException;
+import main.java.com.utn.simbatallas.domain.exceptions.NullOponentException;
+import main.java.com.utn.simbatallas.domain.exceptions.SimguerraException;
 
 import java.util.List;
 import java.util.Observable;
@@ -16,7 +16,7 @@ import java.util.Random;
  */
 public class Army extends Observable implements Runnable {
 
-    private final Object criticalSection;
+    private static final Object critsec = new Object();
     private String armyName;
     private List<ArmyUnit> unitList;
     private BattleField battleField;
@@ -33,7 +33,6 @@ public class Army extends Observable implements Runnable {
         this.setArmyName(armyName);
         this.setUnitList(unitList);
         this.setBattleField(battleField);
-        this.criticalSection = new Object();
     }
 
     public String getArmyName() {
@@ -52,8 +51,8 @@ public class Army extends Observable implements Runnable {
         this.unitList = unitList;
     }
 
-    private Object getCriticalSection() {
-        return criticalSection;
+    private Object getCritsec() {
+        return critsec;
     }
 
     public BattleField getBattleField() {
@@ -72,19 +71,6 @@ public class Army extends Observable implements Runnable {
         this.enemy = enemy;
     }
 
-    public int getAliveUnits() {
-        int contador = 0;
-        if (!this.getUnitList().isEmpty()) {
-            for (ArmyUnit u :
-                    this.getUnitList()) {
-                if (u.isEstado()) {
-                    contador++;
-                }
-            }
-        }
-        return contador;
-    }
-
     public boolean isDefeated() {
         return (this.getAliveUnits() == 0) && (!this.isEmpty());
     }
@@ -93,10 +79,23 @@ public class Army extends Observable implements Runnable {
         return (this.getUnitList().isEmpty());
     }
 
-    private int randomNumber() {
-        Random ran = new Random();
+    public int getAliveUnits() {
+        int contador = 0;
+        if (!this.getUnitList().isEmpty()) {
+            for (ArmyUnit u :
+                    this.getUnitList()) {
+                if (u.isAlive()) {
+                    contador++;
+                }
+            }
+        }
+        return contador;
+    }
 
-        int val = ran.nextInt() % 1500;
+    private int randomNumber() {
+        Random rand = new Random();
+
+        int val = rand.nextInt() % 1500;
 
         if (val < 0) {
             val = val * (-1);
@@ -112,7 +111,7 @@ public class Army extends Observable implements Runnable {
 
         int i = rnd.nextInt(list.size());
 
-        return (list.get(i).isEstado()) ? list.get(i) : getRandomUnit();
+        return (list.get(i).isAlive()) ? list.get(i) : getRandomUnit();
     }
 
 
@@ -120,37 +119,25 @@ public class Army extends Observable implements Runnable {
         ArmyUnit attacker = getRandomUnit();
         ArmyUnit defender = enemy.getRandomUnit();
 
-        attacker.atacar(defender);
+        attacker.attack(defender);
 
-        if (defender.getSalud() <= 0) {
-            defender.setEstado(false);
+        if (defender.getHealth() <= 0) {
+            defender.setAlive(false);
         }
 
         this.setChanged();
 
-        MessageBattle m = new MessageBattle(
+        MessageBattleLog m = new MessageBattleLog(
                 this.getArmyName().toUpperCase(),
                 String.valueOf(attacker.getId()),
-                attacker.getComportamientoAtaque().toString(),
-                String.valueOf(attacker.getDanioHechoUltimoAtaque()),
+                attacker.getAttackBehavior().toString(),
+                String.valueOf(attacker.getLastAttackDamage()),
                 this.getEnemy().getArmyName().toUpperCase(),
                 String.valueOf(defender.getId()),
-                defender.getComportamientoAtaque().toString() + "(" + defender.getComportamientoDefensa().toString() + ")",
-                ((defender.getSalud() <= 0) ? "MUERTO" : String.valueOf(defender.getSalud())));
+                defender.getAttackBehavior().toString() + "(" + defender.getDefenseBehavior().toString() + ")",
+                ((defender.getHealth() <= 0) ? "MUERTO" : String.valueOf(defender.getHealth())));
 
         notifyObservers(m);
-        /*old notify
-        notifyObservers(
-                "ATAQUE: SoldadoID:" + attacker.getId() + " (" +
-                        this.getArmyName().toUpperCase() + ")" +
-                        " hizo Daño " + attacker.getDanioHechoUltimoAtaque() +
-                        " con " + attacker.getComportamientoAtaque().getTipoArma() +
-                        " -> a SoldadoID:" + defend.getId() + " (" +
-                        this.enemy.getArmyName().toUpperCase() + ")" +
-                        " defensa: " + defend.getComportamientoDefensa().getTipoDefensa() +
-                        " y dejadolo " + ((defend.getSalud() <= 0) ? "MUERTO" :
-                        "con " + defend.getSalud() + " de vida."));
-        */
     }
 
     @Override
@@ -169,65 +156,70 @@ public class Army extends Observable implements Runnable {
         try {
             if (this.getEnemy() == null) {
                 // Si enemy es nulo
-                throw new OponenteNoSetException();
+                throw new NullOponentException(this);
             } else {
                 if (this.getEnemy().getEnemy() == null) {
                     // Si el oponende de mi enemy es NULL
-                    throw new ReferenciaCruzadaNoSetThisException();
+                    throw new CrossReferenceException(this);
                 } else if (!this.getEnemy().getEnemy().equals(this)) {
                     // Si el enemy de mi enemy no es THIS
-                    throw new ReferenciaCruzadaNoSetThisException();
+                    throw new CrossReferenceException(this.getEnemy());
                 } else {
                     if (this.isEmpty() || this.getEnemy().isEmpty()) {
                         // Si no tengo unidades o mi enemy no tiene unidades
-                        throw new NoSoldadosException();
+                        if (this.isEmpty()) {
+                            throw new NoSoldiersException(this);
+                        } else if (this.getEnemy().isEmpty()) {
+                            throw new NoSoldiersException(this.getEnemy());
+                        }
                     } else {
                         // Mientras que no haya un ganador en el campo de batalla
                         while (this.getBattleField().getWinner() == null) {
                             // Duermo el hilo aleatoriamente creando margen
                             Thread.sleep((long) randomNumber());
-                            // Entro en la criticalSection
-                            synchronized (criticalSection) {
+                            // Entro en la critsec
+                            synchronized (critsec) {
                                 while (!this.getBattleField().isAvailable()) {
                                     // Si el recurso compartido (campo de batalla) no esta disponible WAIT
-                                    this.getCriticalSection().wait();
+                                    critsec.wait();
                                 }
                                 // THIS se apodera de el campo de batalla
                                 this.getBattleField().setAvailable(false);
 
-                                this.getBattleField().enfrentamiento(this, this.getEnemy());
+                                this.getBattleField().confrontation(this, this.getEnemy());
+
                                 // Libero el recurso compartido
                                 this.getBattleField().setAvailable(true);
+
                                 // Notifico a todos
-                                this.getCriticalSection().notifyAll();
+                                critsec.notifyAll();
                             }
                         }
                     }
                 }
             }
-        } catch (InterruptedException e) {
-            System.out.printf(this.getArmyName().toUpperCase() + " Thread Interrumpido.\n");
-        } catch (OponenteNoSetException e) {
-            System.out.printf(this.getArmyName().toUpperCase() + " ERROR: enemy no set.\n");
-        } catch (PartidaTerminadaException e) {
+        } catch (SimguerraException e) {
             this.setChanged();
 
-            MessageSuccess m = new MessageSuccess(
-                    "Partida terminada, ganador: " +
-                    this.getBattleField().getWinner().getArmyName().toUpperCase() +
-                    "\n(los resultados se guardarán en la base de datos)"
+            notifyObservers(e.getMsg());
+        } catch (InterruptedException e) {
+            notifyObservers(
+                    this.getArmyName().toUpperCase() +
+                            " Thread Interrumpido.\n"
             );
-
-            notifyObservers(m);
-        } catch (NoSoldadosException e) {
-            System.out.printf(this.getArmyName().toUpperCase() + " ERROR: no hay soldadosList.\n");
-        } catch (ReferenciaCruzadaNoSetThisException e) {
-            System.out.printf(this.getArmyName().toUpperCase() + " ERROR: referencia cruzada no set.\n");
         } catch (Exception e) {
-            System.out.println(this.getArmyName().toUpperCase() + " ERROR: desconocido.\n");
-            e.printStackTrace();
+            MessageError msge = new MessageError(
+                    this.getArmyName().toUpperCase() +
+                            " Error desconocido.\n" +
+                            e.getMessage()
+            );
+            this.setChanged();
+
+            notifyObservers(msge);
+            //e.printStackTrace();
         } finally {
             this.getBattleField().setAvailable(true);
         }
+        //System.out.println(this.getArmyName() + " TERMINE");
     }
 }

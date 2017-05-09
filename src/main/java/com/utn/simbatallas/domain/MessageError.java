@@ -6,11 +6,8 @@ package main.java.com.utn.simbatallas.domain;
  * Clase Mensaje de error
  */
 public class MessageError extends Message {
-    public MessageError() {
-        this.type = "ERROR: ";
-    }
-
     public MessageError(String simpleMessage) {
         super(simpleMessage);
+        this.setType("ERROR: ");
     }
 }

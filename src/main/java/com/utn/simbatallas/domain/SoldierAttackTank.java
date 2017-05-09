@@ -13,16 +13,16 @@ public class SoldierAttackTank extends SoldierAttackWrapper {
     }
 
     @Override
-    public void atacar(ArmyUnit oponente) {
+    public void attack(ArmyUnit oponent) {
         int danioHecho;
 
-        if ((oponente.getComportamientoAtaque() instanceof SoldierAttackObus) ||
-                (oponente.getComportamientoAtaque() instanceof SoldierAttackRifle)) {
+        if ((oponent.getAttackBehavior() instanceof SoldierAttackObus) ||
+                (oponent.getAttackBehavior() instanceof SoldierAttackRifle)) {
             danioHecho = 1000;
         } else {
-            danioHecho = this.getDamage() - oponente.defend();
+            danioHecho = this.getDamage() - oponent.defend();
         }
-        super.setDamageDone(oponente, danioHecho);
+        super.setDamageDone(oponent, danioHecho);
     }
 
     @Override

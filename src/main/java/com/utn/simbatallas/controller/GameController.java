@@ -17,8 +17,8 @@ import java.util.Random;
 public class GameController {
 
     private static GameController instance;
-    private Thread tAleman;
-    private Thread tRuso;
+    private Thread tGermans;
+    private Thread tRussians;
 
     private GameController() {
 
@@ -33,14 +33,15 @@ public class GameController {
 
     public void run() {
         //creo el campo de batalla
-        BattleField stalingrado = new BattleField("Stalingrado", true);
+        BattleField stalingrado = new BattleField("Stalingrado");
         //obtengo la base de datos
         DataBase db = BattleMySQLPersistence.getInstance();
-        //instancio el observador
-        ConsoleView consoleView = new ConsoleView();
-        SimpleController s = SimpleController.getInstance();
+        //instancio observadores
+        ConsoleView consoleView = ConsoleView.getInstance();
+        ViewBattleController vbc = ViewBattleController.getInstance();
 
 
+        ArmyUnit.setQuantity(0);
         //creo el ejercito germans
         Army germans = createArmy("Alemanes", 5, stalingrado);
         //creo el ejercito russians
@@ -54,24 +55,23 @@ public class GameController {
         //germans.addObserver(consoleView);
         //russians.addObserver(consoleView);
 
-        germans.addObserver(s);
-        russians.addObserver(s);
-
+        germans.addObserver(vbc);
+        russians.addObserver(vbc);
         db.addObserver(consoleView);
         stalingrado.addObserver(db);
 
-        tAleman = new Thread(germans);
-        tRuso = new Thread(russians);
+        tGermans = new Thread(germans);
+        tRussians = new Thread(russians);
 
         //inicio los threads
-        tAleman.start();
-        tRuso.start();
+        tGermans.start();
+        tRussians.start();
     }
 
     public void stop() {
-        if ((tAleman != null) && (tRuso != null)) {
-            tAleman.interrupt();
-            tRuso.interrupt();
+        if ((tGermans != null) && (tRussians != null)) {
+            tGermans.interrupt();
+            tRussians.interrupt();
         }
     }
 

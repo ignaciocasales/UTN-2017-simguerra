@@ -15,7 +15,7 @@ public class SoldierAttackRifle extends SoldierAttackWrapper {
     }
 
     @Override
-    public void atacar(ArmyUnit oponent) {
+    public void attack(ArmyUnit oponent) {
         int damage = 0;
 
         Random rnd = new Random();

@@ -16,6 +16,6 @@ public class SoldierDefenseArmor extends SoldierDefenseWrapper {
 
     @Override
     public String toString() {
-        return "Blindaje";
+        return "Blindado";
     }
 }

@@ -12,19 +12,19 @@ public class SoldierAttackPlane extends SoldierAttackWrapper {
     }
 
     @Override
-    public void atacar(ArmyUnit oponente) {
+    public void attack(ArmyUnit oponent) {
         int danioHecho = 0;
 
-        if ((oponente.getComportamientoAtaque() instanceof SoldierAttackTank) ||
-                (oponente.getComportamientoAtaque() instanceof SoldierAttackRifle)) {
+        if ((oponent.getAttackBehavior() instanceof SoldierAttackTank) ||
+                (oponent.getAttackBehavior() instanceof SoldierAttackRifle)) {
             danioHecho = 1000;
         } else {
             danioHecho = this.getDamage();
         }
 
-        oponente.setSalud(oponente.getSalud() - danioHecho);
+        oponent.setHealth(oponent.getHealth() - danioHecho);
 
-        setDanioHechoUltimoAtaque(danioHecho);
+        setLastAttackDamage(danioHecho);
     }
 
     @Override

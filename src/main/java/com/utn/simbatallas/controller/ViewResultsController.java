@@ -23,48 +23,50 @@ import java.util.ResourceBundle;
 
 /**
  * Created by Ignacio on 5/7/2017.
+ *
+ * Controlador de la vista de resultados de batallas
  */
-public class ResultsController implements Initializable {
+public class ViewResultsController implements Initializable {
 
-    private static ResultsController instance;
+    private static ViewResultsController instance;
     private final ObservableList<Record> dataList
             = FXCollections.observableArrayList();
 
     @FXML
     private TableView<Record> tableResults;
     @FXML
-    private TableColumn c21;
+    private TableColumn<Record, String> c21;
     @FXML
-    private TableColumn c22;
+    private TableColumn<Record, String> c22;
     @FXML
-    private TableColumn c23;
+    private TableColumn<Record, String> c23;
     @FXML
-    private TableColumn c24;
+    private TableColumn<Record, String> c24;
     @FXML
-    private TableColumn c25;
+    private TableColumn<Record, String> c25;
     @FXML
-    private TableColumn c26;
+    private TableColumn<Record, String> c26;
     @FXML
-    private TableColumn c27;
+    private TableColumn<Record, String> c27;
     @FXML
     private Button reload;
     @FXML
     private Button goBack;
 
-    private ResultsController() {
+    private ViewResultsController() {
 
     }
 
-    public static ResultsController getInstance() {
+    static ViewResultsController getInstance() {
         if (instance == null) {
-            instance = new ResultsController();
+            instance = new ViewResultsController();
         }
         return instance;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("CONTROLADOR DE VISTA CARGADO");
+        //System.out.println("CONTROLADOR DE VISTA(" + this.getClass().getSimpleName().toUpperCase() + ")CARGADO");
 
         c21.setCellValueFactory(
                 new PropertyValueFactory<>("f1"));
@@ -92,7 +94,7 @@ public class ResultsController implements Initializable {
             Stage stage = (Stage) goBack.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("../view/ui/game-view.fxml"));
-            SimpleController s = SimpleController.getInstance();
+            ViewBattleController s = ViewBattleController.getInstance();
             loader.setController(s);
             Parent primaryScene = loader.load();
             stage.setScene(new Scene(primaryScene));

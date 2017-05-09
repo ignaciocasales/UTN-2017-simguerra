@@ -5,13 +5,10 @@ package main.java.com.utn.simbatallas.domain;
  * <p>
  * Clase Mensaje
  */
-public class Message {
-    String simpleMessage;
-    String type;
+public abstract class Message {
 
-    public Message() {
-        type = "template";
-    }
+    protected String type = "template";
+    private String simpleMessage;
 
     public Message(String simpleMessage) {
         this.simpleMessage = simpleMessage;

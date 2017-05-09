@@ -6,9 +6,9 @@ package main.java.com.utn.simbatallas.domain;
  * Interfaz de comportamiento de ataque de los Soldados
  */
 public interface ISoldierAttack {
-    void atacar(ArmyUnit oponente);
+    void attack(ArmyUnit oponent);
 
-    int getDanioHechoUltimoAtaque();
+    int getLastAttackDamage();
 
-    void setDanioHechoUltimoAtaque(int danio);
+    void setLastAttackDamage(int damage);
 }

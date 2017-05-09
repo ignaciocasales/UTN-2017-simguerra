@@ -25,21 +25,21 @@ public abstract class SoldierAttackWrapper implements ISoldierAttack {
 
     public void setDamageDone(ArmyUnit oponent, int damage) {
         if (damage > 0) {
-            oponent.setSalud(oponent.getSalud() - damage);
-            setDanioHechoUltimoAtaque(damage);
+            oponent.setHealth(oponent.getHealth() - damage);
+            setLastAttackDamage(damage);
         } else {
-            oponent.setSalud(oponent.getSalud() - this.getDamage());
-            setDanioHechoUltimoAtaque(this.getDamage());
+            oponent.setHealth(oponent.getHealth() - this.getDamage());
+            setLastAttackDamage(this.getDamage());
         }
     }
 
     @Override
-    public int getDanioHechoUltimoAtaque() {
+    public int getLastAttackDamage() {
         return this.lastAttackDamage;
     }
 
     @Override
-    public void setDanioHechoUltimoAtaque(int danio) {
-        this.lastAttackDamage = danio;
+    public void setLastAttackDamage(int damage) {
+        this.lastAttackDamage = damage;
     }
 }

@@ -7,20 +7,28 @@ package main.java.com.utn.simbatallas.domain;
  */
 public class ArmyUnit implements ISoldierAttack, ISoldierDefense {
 
-    private static int cantidadGlobal = 0;
+    private static int quantity = 0;
     private int id;
-    private int Salud;
-    private boolean estado;
-    private ISoldierAttack comportamientoAtaque;
-    private ISoldierDefense comportamientoDefensa;
+    private int health;
+    private boolean alive;
+    private ISoldierAttack attackBehavior;
+    private ISoldierDefense defenseBehavior;
 
-    public ArmyUnit(ISoldierAttack comportamientoAtaque, ISoldierDefense comportamientoDefensa) {
-        this.setId(cantidadGlobal + 1);
-        this.Salud = 250;
-        this.estado = true;
-        this.setComportamientoAtaque(comportamientoAtaque);
-        this.setComportamientoDefensa(comportamientoDefensa);
-        cantidadGlobal = cantidadGlobal + 1;
+    public ArmyUnit(ISoldierAttack attackBehavior, ISoldierDefense defenseBehavior) {
+        this.setId(quantity + 1);
+        this.health = 250;
+        this.alive = true;
+        this.setAttackBehavior(attackBehavior);
+        this.setDefenseBehavior(defenseBehavior);
+        quantity = quantity + 1;
+    }
+
+    public static int getQuantity() {
+        return quantity;
+    }
+
+    public static void setQuantity(int quantity) {
+        ArmyUnit.quantity = quantity;
     }
 
     public int getId() {
@@ -31,64 +39,56 @@ public class ArmyUnit implements ISoldierAttack, ISoldierDefense {
         this.id = id;
     }
 
-    public int getSalud() {
-        return Salud;
+    public int getHealth() {
+        return health;
     }
 
-    public void setSalud(int salud) {
-        this.Salud = salud;
+    public void setHealth(int health) {
+        this.health = health;
     }
 
-    public static int getCantidadGlobal() {
-        return cantidadGlobal;
+    public boolean isAlive() {
+        return alive;
     }
 
-    public static void setCantidadGlobal(int cantidadGlobal) {
-        ArmyUnit.cantidadGlobal = cantidadGlobal;
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 
-    public boolean isEstado() {
-        return estado;
+    public ISoldierAttack getAttackBehavior() {
+        return attackBehavior;
     }
 
-    public void setEstado(boolean estado) {
-        this.estado = estado;
+    public void setAttackBehavior(ISoldierAttack attackBehavior) {
+        this.attackBehavior = attackBehavior;
     }
 
-    public ISoldierAttack getComportamientoAtaque() {
-        return comportamientoAtaque;
+    public ISoldierDefense getDefenseBehavior() {
+        return defenseBehavior;
     }
 
-    public void setComportamientoAtaque(ISoldierAttack comportamientoAtaque) {
-        this.comportamientoAtaque = comportamientoAtaque;
-    }
-
-    public ISoldierDefense getComportamientoDefensa() {
-        return comportamientoDefensa;
-    }
-
-    public void setComportamientoDefensa(ISoldierDefense comportamientoDefensa) {
-        this.comportamientoDefensa = comportamientoDefensa;
+    public void setDefenseBehavior(ISoldierDefense defenseBehavior) {
+        this.defenseBehavior = defenseBehavior;
     }
 
     @Override
-    public void atacar(ArmyUnit oponente) {
-        this.comportamientoAtaque.atacar(oponente);
+    public void attack(ArmyUnit oponent) {
+        this.attackBehavior.attack(oponent);
     }
 
     @Override
-    public int getDanioHechoUltimoAtaque() {
-        return this.comportamientoAtaque.getDanioHechoUltimoAtaque();
+    public int getLastAttackDamage() {
+        return this.attackBehavior.getLastAttackDamage();
     }
 
     @Override
-    public void setDanioHechoUltimoAtaque(int danio) {
-        this.comportamientoAtaque.setDanioHechoUltimoAtaque(danio);
+    public void setLastAttackDamage(int damage) {
+        this.attackBehavior.setLastAttackDamage(damage);
     }
 
     @Override
     public int defend() {
-        return this.comportamientoDefensa.defend();
+        return this.defenseBehavior.defend();
     }
 
     @Override

@@ -6,11 +6,8 @@ package main.java.com.utn.simbatallas.domain;
  * Clase Mensaje de exito
  */
 public class MessageSuccess extends Message {
-    public MessageSuccess() {
-        this.type = "SUCCESS: ";
-    }
-
     public MessageSuccess(String simpleMessage) {
         super(simpleMessage);
+        this.setType("SUCCESS: ");
     }
 }

@@ -1,6 +1,7 @@
 package main.java.com.utn.simbatallas.persistence;
 
 import main.java.com.utn.simbatallas.domain.BattleField;
+import main.java.com.utn.simbatallas.domain.MessageSuccess;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class BattleMySQLPersistence extends DataBase {
             connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/mysql",
                     "root",
-                    ""
+                    "123"
             );
 
             // Se crea la base de datos y la tabla si no existe
@@ -47,7 +48,7 @@ public class BattleMySQLPersistence extends DataBase {
             connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/simguerra",
                     "root",
-                    ""
+                    "123"
             );
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,7 +79,9 @@ public class BattleMySQLPersistence extends DataBase {
 
             this.setChanged();
 
-            notifyObservers("DATBASE SUCCESS: Resultados de partida almacenados con éxito.");
+            MessageSuccess msgs = new MessageSuccess("Resultados de partida almacenados con éxito");
+
+            notifyObservers(msgs);
         } catch (SQLException e) {
             e.printStackTrace();
         }

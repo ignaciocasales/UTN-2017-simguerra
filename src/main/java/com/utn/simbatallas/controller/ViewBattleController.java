@@ -16,7 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import main.java.com.utn.simbatallas.domain.Message;
-import main.java.com.utn.simbatallas.domain.MessageBattle;
+import main.java.com.utn.simbatallas.domain.MessageBattleLog;
 import main.java.com.utn.simbatallas.domain.MessageError;
 import main.java.com.utn.simbatallas.domain.MessageSuccess;
 
@@ -29,31 +29,31 @@ import java.util.ResourceBundle;
 /**
  * Created by Ignacio on 5/6/2017.
  * <p>
- * Controlador de la vista
+ * Controlador de la vista principal
  */
-public class SimpleController implements Initializable, Observer {
+public class ViewBattleController implements Initializable, Observer {
 
-    private static SimpleController instance;
+    private static ViewBattleController instance;
     private final ObservableList<Record> dataList
             = FXCollections.observableArrayList();
     @FXML
     private TableView<Record> table;
     @FXML
-    private TableColumn c1;
+    private TableColumn<Record, String> c1;
     @FXML
-    private TableColumn c2;
+    private TableColumn<Record, String> c2;
     @FXML
-    private TableColumn c3;
+    private TableColumn<Record, String> c3;
     @FXML
-    private TableColumn c4;
+    private TableColumn<Record, String> c4;
     @FXML
-    private TableColumn c5;
+    private TableColumn<Record, String> c5;
     @FXML
-    private TableColumn c6;
+    private TableColumn<Record, String> c6;
     @FXML
-    private TableColumn c7;
+    private TableColumn<Record, String> c7;
     @FXML
-    private TableColumn c8;
+    private TableColumn<Record, String> c8;
     @FXML
     private Button start;
     @FXML
@@ -61,21 +61,20 @@ public class SimpleController implements Initializable, Observer {
     @FXML
     private Button results;
 
-    private SimpleController() {
+    private ViewBattleController() {
 
     }
 
-    public static SimpleController getInstance() {
+    static ViewBattleController getInstance() {
         if (instance == null) {
-            instance = new SimpleController();
+            instance = new ViewBattleController();
         }
         return instance;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("CONTROLADOR DE VISTA CARGADO");
-
+        //System.out.println("CONTROLADOR DE VISTA(" + this.getClass().getSimpleName().toUpperCase() + ")CARGADO");
 
         c1.setCellValueFactory(
                 new PropertyValueFactory<>("f1"));
@@ -118,7 +117,7 @@ public class SimpleController implements Initializable, Observer {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("../view/ui/results.fxml"));
 
-            ResultsController rs = ResultsController.getInstance();
+            ViewResultsController rs = ViewResultsController.getInstance();
 
             loader.setController(rs);
 
@@ -135,19 +134,19 @@ public class SimpleController implements Initializable, Observer {
         //System.out.println("UPDATE: vista.");
         if (arg instanceof Message) {
 
-            if (arg instanceof MessageBattle) {
-                MessageBattle m = (MessageBattle) arg;
+            if (arg instanceof MessageBattleLog) {
+                MessageBattleLog mbl = (MessageBattleLog) arg;
 
                 String[] strings = new String[8];
 
-                strings[0] = m.getS1();
-                strings[1] = m.getS2();
-                strings[2] = m.getS3();
-                strings[3] = m.getS4();
-                strings[4] = m.getS5();
-                strings[5] = m.getS6();
-                strings[6] = m.getS7();
-                strings[7] = m.getS8();
+                strings[0] = mbl.getS1();
+                strings[1] = mbl.getS2();
+                strings[2] = mbl.getS3();
+                strings[3] = mbl.getS4();
+                strings[4] = mbl.getS5();
+                strings[5] = mbl.getS6();
+                strings[6] = mbl.getS7();
+                strings[7] = mbl.getS8();
 
                 Record record = new Record(strings[0], strings[1], strings[2],
                         strings[3], strings[4], strings[5], strings[6], strings[7]);
@@ -158,23 +157,25 @@ public class SimpleController implements Initializable, Observer {
                 results.setDisable(false);
 
                 Platform.runLater(() -> {
-                    App.alert.setTitle(m.getType());
-                    App.alert.setHeaderText(null);
-                    App.alert.setContentText(m.getSimpleMessage());
-                    App.alert.setAlertType(Alert.AlertType.INFORMATION);
-                    App.alert.showAndWait();
+                    AppStart.alert.setTitle(m.getType());
+                    AppStart.alert.setHeaderText(null);
+                    AppStart.alert.setContentText(m.getSimpleMessage());
+                    AppStart.alert.setAlertType(Alert.AlertType.INFORMATION);
+                    AppStart.alert.showAndWait();
                 });
             } else if (arg instanceof MessageError) {
                 MessageError m = (MessageError) arg;
 
                 Platform.runLater(() -> {
-                    App.alert.setTitle(m.getType());
-                    App.alert.setHeaderText(null);
-                    App.alert.setContentText(m.getSimpleMessage());
-                    App.alert.setAlertType(Alert.AlertType.ERROR);
-                    App.alert.showAndWait();
+                    AppStart.alert.setTitle(m.getType());
+                    AppStart.alert.setHeaderText(null);
+                    AppStart.alert.setContentText(m.getSimpleMessage());
+                    AppStart.alert.setAlertType(Alert.AlertType.ERROR);
+                    AppStart.alert.showAndWait();
                 });
             }
+        } else {
+            System.out.println((String) arg);
         }
     }
 
