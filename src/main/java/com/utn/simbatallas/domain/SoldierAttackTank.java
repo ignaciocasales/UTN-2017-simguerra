@@ -18,7 +18,7 @@ public class SoldierAttackTank extends SoldierAttackWrapper {
 
         if ((oponent.getAttackBehavior() instanceof SoldierAttackObus) ||
                 (oponent.getAttackBehavior() instanceof SoldierAttackRifle)) {
-            danioHecho = 1000;
+            danioHecho = oponent.getHealth();
         } else {
             danioHecho = this.getDamage() - oponent.defend();
         }

@@ -13,11 +13,11 @@ public class SoldierAttackObus extends SoldierAttackWrapper {
 
     @Override
     public void attack(ArmyUnit oponent) {
-        int danioHecho = 0;
+        int danioHecho;
 
         if ((oponent.getAttackBehavior() instanceof SoldierAttackPlane) ||
                 (oponent.getAttackBehavior() instanceof SoldierAttackRifle)) {
-            danioHecho = 1000;
+            danioHecho = oponent.getHealth();
         } else {
             danioHecho = this.getDamage();
         }

@@ -1,5 +1,6 @@
 package main.java.com.utn.simbatallas.controller;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -23,7 +25,7 @@ import java.util.ResourceBundle;
 
 /**
  * Created by Ignacio on 5/7/2017.
- *
+ * <p>
  * Controlador de la vista de resultados de batallas
  */
 public class ViewResultsController implements Initializable {
@@ -105,18 +107,30 @@ public class ViewResultsController implements Initializable {
 
     @FXML
     public void handleBtnReload() {
-        tableResults.getItems().clear();
+        try {
+            tableResults.getItems().clear();
 
-        DataBase db = BattleMySQLPersistence.getInstance();
+            DataBase db = BattleMySQLPersistence.getInstance();
 
-        List<String[]> dbrslt = db.getAllBattlesResults();
+            List<String[]> dbrslt = db.getAllBattlesResults();
 
-        for (String[] string :
-                dbrslt) {
-            Record record = new Record(string[0], string[1], string[2],
-                    string[3], string[4], string[5], string[6]);
+            for (String[] string :
+                    dbrslt) {
+                Record record = new Record(string[0], string[1], string[2],
+                        string[3], string[4], string[5], string[6]);
 
-            dataList.add(record);
+                dataList.add(record);
+            }
+        } catch (Exception e){
+            if (BattleMySQLPersistence.getInstance().getConnection() == null) {
+                Platform.runLater(() -> {
+                    AppStart.alert.setTitle("ERROR");
+                    AppStart.alert.setHeaderText(null);
+                    AppStart.alert.setContentText("Se produjo un error al intentar conectarse con la base de datos");
+                    AppStart.alert.setAlertType(Alert.AlertType.ERROR);
+                    AppStart.alert.showAndWait();
+                });
+            }
         }
     }
 
