@@ -1,6 +1,8 @@
 package main.java.com.utn.simbatallas.view;
 
+import main.java.com.utn.simbatallas.domain.Army;
 import main.java.com.utn.simbatallas.domain.Message;
+import main.java.com.utn.simbatallas.persistence.BattleMySQLPersistence;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -25,8 +27,19 @@ public class ConsoleView implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg instanceof Message) {
-            System.out.println(((Message) arg).getSimpleMessage());
+
+        if (o instanceof Army) {
+            Army a = (Army) o;
+            if (arg instanceof Message) {
+                System.out.println(a.getArmyName().toUpperCase() + ((Message) arg).getSimpleMessage());
+            }
+        }
+
+        if (o instanceof BattleMySQLPersistence) {
+            if (arg instanceof Message) {
+                Message msgs = (Message) arg;
+                System.out.println("DATABASE " + msgs.getType() + msgs.getSimpleMessage());
+            }
         }
     }
 }

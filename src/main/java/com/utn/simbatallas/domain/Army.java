@@ -81,6 +81,7 @@ public class Army extends Observable implements Runnable {
 
     public int getAliveUnits() {
         int contador = 0;
+
         if (!this.getUnitList().isEmpty()) {
             for (ArmyUnit u :
                     this.getUnitList()) {
@@ -208,6 +209,7 @@ public class Army extends Observable implements Runnable {
                             " Thread Interrumpido.\n"
             );
         } catch (Exception e) {
+            e.printStackTrace();
             MessageError msge = new MessageError(
                     this.getArmyName().toUpperCase() +
                             " Error desconocido.\n" +
@@ -220,6 +222,6 @@ public class Army extends Observable implements Runnable {
         } finally {
             this.getBattleField().setAvailable(true);
         }
-        //System.out.println(this.getArmyName() + " TERMINE");
+        System.out.println("EL THREAD " + this.getArmyName() + " HA TERMINADO !");
     }
 }

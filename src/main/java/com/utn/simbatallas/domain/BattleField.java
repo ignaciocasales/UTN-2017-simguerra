@@ -55,7 +55,7 @@ public class BattleField extends Observable {
         if (this.getWinner() != null) {
             this.setChanged();
 
-            notifyObservers(this);
+            notifyObservers();
 
             throw new BattleWinnerException(this.getWinner());
         } else {

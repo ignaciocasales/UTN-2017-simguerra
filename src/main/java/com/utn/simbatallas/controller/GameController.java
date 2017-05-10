@@ -43,9 +43,9 @@ public class GameController {
 
         ArmyUnit.setQuantity(0);
         //creo el ejercito germans
-        Army germans = createArmy("Alemanes", 5, stalingrado);
+        Army germans = createArmy("Alemanes", 100, stalingrado);
         //creo el ejercito russians
-        Army russians = createArmy("Rusos", 5, stalingrado);
+        Army russians = createArmy("Rusos", 105, stalingrado);
 
         //referencia cruzada de enemigos
         germans.setEnemy(russians);
@@ -54,7 +54,6 @@ public class GameController {
         //seteo los observadores
         //germans.addObserver(consoleView);
         //russians.addObserver(consoleView);
-
         germans.addObserver(vbc);
         russians.addObserver(vbc);
         db.addObserver(consoleView);

@@ -9,16 +9,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import main.java.com.utn.simbatallas.domain.Message;
-import main.java.com.utn.simbatallas.domain.MessageBattleLog;
-import main.java.com.utn.simbatallas.domain.MessageError;
-import main.java.com.utn.simbatallas.domain.MessageSuccess;
+import main.java.com.utn.simbatallas.domain.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -60,6 +54,10 @@ public class ViewBattleController implements Initializable, Observer {
     private Button exit;
     @FXML
     private Button results;
+    @FXML
+    private Label ruscount;
+    @FXML
+    private Label gercount;
 
     private ViewBattleController() {
 
@@ -132,50 +130,57 @@ public class ViewBattleController implements Initializable, Observer {
     @Override
     public void update(Observable o, Object arg) {
         //System.out.println("UPDATE: vista.");
-        if (arg instanceof Message) {
-
-            if (arg instanceof MessageBattleLog) {
-                MessageBattleLog mbl = (MessageBattleLog) arg;
-
-                String[] strings = new String[8];
-
-                strings[0] = mbl.getS1();
-                strings[1] = mbl.getS2();
-                strings[2] = mbl.getS3();
-                strings[3] = mbl.getS4();
-                strings[4] = mbl.getS5();
-                strings[5] = mbl.getS6();
-                strings[6] = mbl.getS7();
-                strings[7] = mbl.getS8();
-
-                Record record = new Record(strings[0], strings[1], strings[2],
-                        strings[3], strings[4], strings[5], strings[6], strings[7]);
-                dataList.add(record);
-            } else if (arg instanceof MessageSuccess) {
-                MessageSuccess m = (MessageSuccess) arg;
-
-                results.setDisable(false);
-
-                Platform.runLater(() -> {
-                    AppStart.alert.setTitle(m.getType());
-                    AppStart.alert.setHeaderText(null);
-                    AppStart.alert.setContentText(m.getSimpleMessage());
-                    AppStart.alert.setAlertType(Alert.AlertType.INFORMATION);
-                    AppStart.alert.showAndWait();
-                });
-            } else if (arg instanceof MessageError) {
-                MessageError m = (MessageError) arg;
-
-                Platform.runLater(() -> {
-                    AppStart.alert.setTitle(m.getType());
-                    AppStart.alert.setHeaderText(null);
-                    AppStart.alert.setContentText(m.getSimpleMessage());
-                    AppStart.alert.setAlertType(Alert.AlertType.ERROR);
-                    AppStart.alert.showAndWait();
-                });
+        if (o instanceof Army) {
+            Army a = (Army) o;
+            if (a.getArmyName().equals("Alemanes")) {
+                Platform.runLater(() -> gercount.setText(String.valueOf(a.getAliveUnits())));
+                Platform.runLater(() -> ruscount.setText(String.valueOf(a.getEnemy().getAliveUnits())));
+            } else if (a.getArmyName().equals("Rusos")) {
+                Platform.runLater(() -> ruscount.setText(String.valueOf(a.getAliveUnits())));
+                Platform.runLater(() -> gercount.setText(String.valueOf(a.getEnemy().getAliveUnits())));
             }
-        } else {
-            System.out.println((String) arg);
+            if (arg instanceof Message) {
+                if (arg instanceof MessageBattleLog) {
+                    MessageBattleLog mbl = (MessageBattleLog) arg;
+
+                    String[] strings = new String[8];
+
+                    strings[0] = mbl.getS1();
+                    strings[1] = mbl.getS2();
+                    strings[2] = mbl.getS3();
+                    strings[3] = mbl.getS4();
+                    strings[4] = mbl.getS5();
+                    strings[5] = mbl.getS6();
+                    strings[6] = mbl.getS7();
+                    strings[7] = mbl.getS8();
+
+                    Record record = new Record(strings[0], strings[1], strings[2],
+                            strings[3], strings[4], strings[5], strings[6], strings[7]);
+                    dataList.add(record);
+                } else if (arg instanceof MessageSuccess) {
+                    MessageSuccess m = (MessageSuccess) arg;
+
+                    results.setDisable(false);
+
+                    Platform.runLater(() -> {
+                        AppStart.alert.setTitle(m.getType());
+                        AppStart.alert.setHeaderText(null);
+                        AppStart.alert.setContentText(m.getSimpleMessage());
+                        AppStart.alert.setAlertType(Alert.AlertType.INFORMATION);
+                        AppStart.alert.showAndWait();
+                    });
+                } else if (arg instanceof MessageError) {
+                    MessageError m = (MessageError) arg;
+
+                    Platform.runLater(() -> {
+                        AppStart.alert.setTitle(m.getType());
+                        AppStart.alert.setHeaderText(null);
+                        AppStart.alert.setContentText(m.getSimpleMessage());
+                        AppStart.alert.setAlertType(Alert.AlertType.ERROR);
+                        AppStart.alert.showAndWait();
+                    });
+                }
+            }
         }
     }
 

@@ -32,6 +32,13 @@
     -fx-text-fill: -text-color-primary;
 }
 
+.gerstatus{
+    -fx-text-fill: #D50000;
+}
+.russtatus{
+    -fx-text-fill: #64DD17;
+}
+
 /*******************************************************************************
  *                                                                             *
  * Button & ToggleButton                                                       *

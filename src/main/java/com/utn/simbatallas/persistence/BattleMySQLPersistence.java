@@ -1,6 +1,7 @@
 package main.java.com.utn.simbatallas.persistence;
 
 import main.java.com.utn.simbatallas.domain.BattleField;
+import main.java.com.utn.simbatallas.domain.MessageError;
 import main.java.com.utn.simbatallas.domain.MessageSuccess;
 
 import java.sql.*;
@@ -51,7 +52,11 @@ public class BattleMySQLPersistence extends DataBase {
                     "123"
             );
         } catch (Exception e) {
-            e.printStackTrace();
+            this.setChanged();
+
+            MessageError msge = new MessageError("Se produjo un error en la conexion");
+
+            notifyObservers(msge);
         }
     }
 
@@ -83,7 +88,17 @@ public class BattleMySQLPersistence extends DataBase {
 
             notifyObservers(msgs);
         } catch (SQLException e) {
-            e.printStackTrace();
+            this.setChanged();
+
+            MessageError msge = new MessageError("Se produjo un error al insertar un registro");
+
+            notifyObservers(msge);
+        } catch (NullPointerException e) {
+            this.setChanged();
+
+            MessageError msge = new MessageError("La conexion no puede ser establecida");
+
+            notifyObservers(msge);
         }
     }
 
@@ -112,18 +127,27 @@ public class BattleMySQLPersistence extends DataBase {
             }
             return list;
         } catch (SQLException e) {
-            e.printStackTrace();
+            this.setChanged();
+
+            MessageError msge = new MessageError("Se produjo un error al traer los registros");
+
+            notifyObservers(msge);
+
             return null;
         }
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
 
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof BattleField) {
             BattleField b = (BattleField) o;
-
-            addBattleResult(b);
+            if (b.getWinner() != null) {
+                addBattleResult(b);
+            }
         }
     }
 }

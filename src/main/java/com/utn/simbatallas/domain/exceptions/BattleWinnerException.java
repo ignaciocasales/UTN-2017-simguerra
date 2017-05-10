@@ -12,8 +12,7 @@ public class BattleWinnerException extends SimguerraException {
     public BattleWinnerException(Army winner) {
         this.msg = new MessageSuccess(
                 "Partida terminada, ganador: " +
-                        winner.getArmyName().toUpperCase() +
-                        "\n(los resultados se guardarán en la base de datos)"
+                        winner.getArmyName().toUpperCase()
         );
     }
 }
