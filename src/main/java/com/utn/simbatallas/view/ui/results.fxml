@@ -15,11 +15,6 @@
             <RowConstraints/>
             <RowConstraints/>
         </rowConstraints>
-        <MenuBar GridPane.columnIndex="0" GridPane.rowIndex="0">
-            <Menu mnemonicParsing="false" text="Opciones">
-                <MenuItem mnemonicParsing="false" text="Salir          "/>
-            </Menu>
-        </MenuBar>
         <GridPane GridPane.columnIndex="0" GridPane.rowIndex="1">
             <columnConstraints>
                 <ColumnConstraints halignment="CENTER" percentWidth="100.0"/>

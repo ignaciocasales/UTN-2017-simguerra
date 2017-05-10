@@ -11,7 +11,7 @@ import main.java.com.utn.simbatallas.domain.MessageSuccess;
 public class BattleWinnerException extends SimguerraException {
     public BattleWinnerException(Army winner) {
         this.msg = new MessageSuccess(
-                "Partida terminada, ganador: " +
+                "Partida terminada !\n\t Ganador: " +
                         winner.getArmyName().toUpperCase()
         );
     }
